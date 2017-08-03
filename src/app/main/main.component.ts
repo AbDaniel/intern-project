@@ -24,6 +24,10 @@ export class MainComponent {
       title: 'Manage Users',
       route: '/users',
       icon: 'people',
+    }, {
+      title: 'All Projects',
+      route: '/projects',
+      icon: 'receipt',
     },
   ];
 
