@@ -1,6 +1,4 @@
-import {Provider, SkipSelf, Optional, InjectionToken} from '@angular/core';
-import {Response, Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import {Http} from '@angular/http';
 
 import {Injectable} from '@angular/core';
 
@@ -26,21 +24,14 @@ export class ProjectService {
   getProjects(): Promise<Project[]> {
     return this.http.get(this.projectsUrl + '/boards')
       .toPromise()
-      .then((response) => response.json() as Project[])
-      .catch(this.handleError);
+      .then((response) => response.json() as Project[]);
   }
 
-  get(): Observable<Project[]> {
-    return this.http.get(this.projectsUrl + '/boards')
-      .map((res: Response) => {
-        return res.json();
-      });
-  }
-
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+  getProjectsSlowly(): Promise<Project[]> {
+    return new Promise(resolve => {
+      // Simulate server latency with 2 second delay
+      setTimeout(() => resolve(this.getProjects()), 2000);
+    });
   }
 
 }

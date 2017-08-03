@@ -55,9 +55,11 @@ export class ProjectComponent implements AfterViewInit, OnInit {
 
   async load(): Promise<void> {
     try {
-      this.projects = await this._projectService.get().toPromise();
+      this._loadingService.register('projects.list');
+      this.projects = await this._projectService.getProjectsSlowly();
     } finally {
       this.filteredProjects = Object.assign([], this.projects);
+      this._loadingService.resolve('projects.list');
     }
   }
 }

@@ -13,15 +13,13 @@ import {DetailComponent} from './detail/detail.component';
 import {LoginComponent} from './login/login.component';
 import {FormComponent} from './form/form.component';
 import {ProjectComponent} from './projects/projects.component';
+import {ProjectDashboardComponent} from './project-dashboard/project-dashboard.component';
+import {DiffChartComponent} from './charts/diff-chart/diff-chart.component';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
-  },
-  {
-    path: 'projects',
-    component: ProjectComponent
   },
   {
     path: '',
@@ -30,6 +28,18 @@ const routes: Routes = [
       {
         component: DashboardComponent,
         path: '',
+      },
+      {
+        path: 'projects',
+        component: ProjectComponent,
+      },
+      {
+        path: 'projectsdashboard',
+        component: ProjectDashboardComponent,
+      },
+      {
+        path: 'diffchart',
+        component: DiffChartComponent,
       },
       {
         path: 'product',
@@ -98,4 +108,5 @@ export const routedComponents: any[] = [
   DashboardComponent, DashboardProductComponent,
   FormComponent, LogsComponent, DetailComponent,
   FeaturesFormComponent, ProductFeaturesComponent, ProductOverviewComponent, ProductStatsComponent, ProjectComponent,
+  ProjectDashboardComponent, DiffChartComponent,
 ];

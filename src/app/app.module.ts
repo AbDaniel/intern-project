@@ -15,7 +15,9 @@ import { routedComponents, AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 
 import { USER_PROVIDER, USERS_API } from './users';
-import {ProjectService} from "./projects/services/projects.service";
+import {ProjectService} from './projects/services/projects.service';
+import { DiffChartComponent } from './charts/diff-chart/diff-chart.component';
+import {SprintDetailsService} from "./charts/diff-chart/sprint-details-service";
 
 const httpInterceptorProviders: Type<any>[] = [
   RequestInterceptor,
@@ -29,6 +31,7 @@ export function getAPI(): string {
   declarations: [
     AppComponent,
     routedComponents,
+    DiffChartComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     AppRoutingModule,
@@ -46,6 +49,7 @@ export function getAPI(): string {
   providers: [
     httpInterceptorProviders,
     ProjectService,
+    SprintDetailsService,
     Title, {
       provide: USERS_API, useFactory: getAPI,
     }, USER_PROVIDER,
