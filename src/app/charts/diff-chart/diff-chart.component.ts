@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
 
 import * as d3 from 'd3';
 import {SprintDetailsService} from './sprint-details-service';
 import {Title} from '@angular/platform-browser';
 import {TdLoadingService} from '@covalent/core';
+import {Project} from '../../projects/services/projects.service';
 
 @Component({
   selector: 'qs-diff-chart',
@@ -12,11 +13,14 @@ import {TdLoadingService} from '@covalent/core';
   styleUrls: ['./diff-chart.component.scss']
 })
 
-export class DiffChartComponent implements OnInit {
+export class DiffChartComponent implements OnInit, OnChanges {
+  initExecuted = false;
   title = 'app';
   sprints: JSON[];
-  width = 960;
-  height = 500;
+  width;
+  height;
+  @Input() day;
+  @Input() project: Project;
 
   constructor(private sprintDetailsService: SprintDetailsService,
               private _titleService: Title,
@@ -24,13 +28,21 @@ export class DiffChartComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.project);
     this.load();
+  }
+
+  ngOnChanges(changes: any) {
+    this.day = changes.day.currentValue;
+    if (this.initExecuted) {
+      this.update();
+    }
   }
 
   async load(): Promise<void> {
     try {
       this._loadingService.register('diff-chart.list');
-      this.sprints = await this.sprintDetailsService.search('491', '365');
+      this.sprints = await this.sprintDetailsService.search(this.project._id, this.day);
     } finally {
       console.log(this.sprints);
       this.render();
@@ -39,23 +51,19 @@ export class DiffChartComponent implements OnInit {
   }
 
 
-  draw() {
-    this.sprintDetailsService.search('491', '365').then(data => {
-      this.sprints = data;
-      this.render();
-    }).catch((ex) => {
-      console.error('Error fetching users', ex);
-    });
-  }
-
   render() {
     const sprints = this.sprints;
 
-    const svg = d3.select('.diff-chart-1'),
+    const svg = d3.select('.diff-chart-1').select('svg'),
       margin = {top: 20, right: 80, bottom: 30, left: 50},
-      width = this.width - margin.left - margin.right,
-      height = this.height - margin.top - margin.bottom,
+      width = +svg.attr('width') - margin.left - margin.right,
+      height = +svg.attr('height') - margin.top - margin.bottom,
       g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    console.log('Hellllllll');
+
+    this.width = +svg.attr('width');
+    this.height = +svg.attr('height');
+
 
     const parseTime = d3.timeParse('%Y%m%d');
 
@@ -82,6 +90,11 @@ export class DiffChartComponent implements OnInit {
         })
       };
     });
+
+    const words = {
+      'completed_estimate' : 'Completed',
+      'not_completed_estimate' : 'Committed'
+    };
 
 
     x.domain(d3.extent(sprints, function (d) {
@@ -148,8 +161,18 @@ export class DiffChartComponent implements OnInit {
       .attr('dy', '0.35em')
       .style('font', '10px sans-serif')
       .text(function (d) {
-        return d.id;
+        return words[d.id];
       });
+
+      this.initExecuted = true;
+  }
+
+  update() {
+    const svg = d3.select('.diff-chart-1').select('svg');
+    svg.remove();
+
+    d3.select('.diff-chart-1').append('svg').attr('width', this.width).attr('height', this.height)
+    this.load();
   }
 
 }

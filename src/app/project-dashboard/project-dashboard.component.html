@@ -1,9 +1,7 @@
 <td-layout-nav logo="assets:covalent">
   <div td-toolbar-content layout="row" layout-align="center center" flex>
-    <span>Quickstart</span>
+    <span>Teradata 360</span>
     <span flex></span>
-    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank"><md-icon>chrome_reader_mode</md-icon></a>
-    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank"><md-icon svgIcon="assets:github"></md-icon></a>
   </div>
 
   <td-layout-manage-list #manageList
@@ -15,19 +13,26 @@
     </md-toolbar>
 
     <div td-toolbar-content layout="row" layout-align="start center" flex>
-      <span>Current Project</span>
+      <div *ngIf="project">
+        <span>{{project.name}}</span>
+      </div>
       <span flex></span>
+      <md-select placeholder="Last 1 year" [(ngModel)]="day">
+        <md-option *ngFor="let d of days" [value]="d.value">{{ d.text }}</md-option>
+      </md-select>
     </div>
 
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="60">
+      <div flex-gt-sm="120">
         <md-card>
-          <md-card-title>Customer Activity</md-card-title>
-          <md-card-subtitle>Recent activity from select members</md-card-subtitle>
+          <md-card-title>Sprint Velocity - JIRA</md-card-title>
+          <md-card-subtitle>Past 1 year</md-card-subtitle>
           <md-divider></md-divider>
           <md-nav-list class="will-load item-list">
             <ng-template tdLoading="items.load">
-              <qs-diff-chart></qs-diff-chart>
+              <div *ngIf="project">
+                <qs-diff-chart [project]="project" [day]="day"></qs-diff-chart>
+              </div>
             </ng-template>
           </md-nav-list>
         </md-card>

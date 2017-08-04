@@ -14,21 +14,13 @@ export class SprintDetailsService {
   constructor(private http: Http) {
   }
 
-  search(boardId: string, daysAgo: string): Promise<JSON[]> {
+  search(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.sprintsUrl}/${boardId}/${daysAgo}`;
 
     console.log(url);
 
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }
-
-  // searchObserve(boardId: string, daysAgo: string): Observable<JSON[]> {
-  //   const url = `${this.sprintsUrl}/${boardId}/${daysAgo}`;
-  //
-  //   console.log(url);
-  //
-  //   return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
-  // }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only

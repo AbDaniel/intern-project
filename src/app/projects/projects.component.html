@@ -30,13 +30,14 @@
           <div class="md-padding" *ngIf="filteredProjects?.length === 0" layout="row" layout-align="center center">
             <h3>No Projects to display.</h3>
           </div>
-          <ng-template let-user let-last="last" ngFor [ngForOf]="filteredProjects">
-            <md-list-item>
+          <ng-template let-project let-last="last" ngFor [ngForOf]="filteredProjects">
+            <a md-list-item layout-align="row" [routerLink]="['../project', project._id]">
               <md-icon md-list-avatar>person</md-icon>
-              <h3 md-line> {{user.name}} </h3>
-              <p md-line> {{user._id}} </p>
+              <h3 md-line> {{project.name}} </h3>
+              <p md-line> {{project._id}} </p>
               <span flex></span>
-            </md-list-item>
+            </a>
+            <md-divider *ngIf="!last" md-inset></md-divider>
           </ng-template>
         </md-list>
       </ng-template>
