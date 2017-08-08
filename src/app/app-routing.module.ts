@@ -14,7 +14,6 @@ import {LoginComponent} from './login/login.component';
 import {FormComponent} from './form/form.component';
 import {ProjectComponent} from './projects/projects.component';
 import {ProjectDashboardComponent} from './project-dashboard/project-dashboard.component';
-import {DiffChartComponent} from './charts/diff-chart/diff-chart.component';
 
 const routes: Routes = [
   {
@@ -36,10 +35,6 @@ const routes: Routes = [
       {
         path: 'project/:id',
         component: ProjectDashboardComponent,
-      },
-      {
-        path: 'diffchart',
-        component: DiffChartComponent,
       },
       {
         path: 'product',
@@ -108,5 +103,5 @@ export const routedComponents: any[] = [
   DashboardComponent, DashboardProductComponent,
   FormComponent, LogsComponent, DetailComponent,
   FeaturesFormComponent, ProductFeaturesComponent, ProductOverviewComponent, ProductStatsComponent, ProjectComponent,
-  ProjectDashboardComponent, DiffChartComponent,
+  ProjectDashboardComponent,
 ];

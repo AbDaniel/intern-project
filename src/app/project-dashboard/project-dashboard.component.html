@@ -38,5 +38,17 @@
         </md-card>
       </div>
     </div>
+
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Velocity Percentage</md-card-title>
+          <md-divider></md-divider>
+          <div *ngIf="project">
+            <qs-line-chart [project]="project" [day]="day"></qs-line-chart>
+          </div>
+        </md-card>
+      </div>
+    </div>
   </td-layout-manage-list>
 </td-layout-nav>

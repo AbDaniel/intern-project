@@ -1,19 +1,19 @@
 import {Component, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
 
 import * as d3 from 'd3';
-import {SprintDetailsService} from './sprint-details-service';
 import {Title} from '@angular/platform-browser';
 import {TdLoadingService} from '@covalent/core';
 import {Project} from '../../projects/services/projects.service';
+import {SprintDetailsService} from '../diff-chart/sprint-details-service';
 
 @Component({
-  selector: 'qs-diff-chart',
-  templateUrl: './diff-chart.component.html',
+  selector: 'qs-line-chart',
+  templateUrl: './line-chart.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./diff-chart.component.scss']
+  styleUrls: ['./line-chart.component.scss']
 })
 
-export class DiffChartComponent implements OnInit, OnChanges {
+export class LineChartComponent implements OnInit, OnChanges {
   initExecuted = false;
   title = 'app';
   sprints: JSON[];
@@ -54,7 +54,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
   render() {
     const sprints = this.sprints;
 
-    const svg = d3.select('.diff-chart-1').select('svg'),
+    const svg = d3.select('.diff-chart-2').select('svg'),
       margin = {top: 20, right: 80, bottom: 30, left: 50},
       width = +svg.attr('width') - margin.left - margin.right,
       height = +svg.attr('height') - margin.top - margin.bottom,
@@ -71,8 +71,6 @@ export class DiffChartComponent implements OnInit, OnChanges {
     const y = d3.scaleLinear().range([height, 0]);
     const z = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const x2 = d3.scaleBand().range([0, width]);
-
     const line = d3.line<any>()
       .curve(d3.curveBasis)
       .x(function (d) {
@@ -82,7 +80,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
         return y(d['points']);
       });
 
-    const keys = ['completed_estimate', 'not_completed_estimate'];
+    const keys = ['percentage_completed', 'mean'];
 
     const estimates = keys.map(function (id) {
       return {
@@ -94,17 +92,13 @@ export class DiffChartComponent implements OnInit, OnChanges {
     });
 
     const keyMap = {
-      'completed_estimate' : 'Completed',
-      'not_completed_estimate' : 'Committed'
+      'percentage_completed' : 'Percentage Completed',
+      'mean': 'Base'
     };
 
 
     x.domain(d3.extent(sprints, function (d) {
       return parseTime(d['date']);
-    }));
-
-    x2.domain(sprints.map(function (d) {
-      return d['name'];
     }));
 
     y.domain([
@@ -129,9 +123,6 @@ export class DiffChartComponent implements OnInit, OnChanges {
       .attr('transform', 'translate(0,' + height + ')')
       .call(d3.axisBottom(x));
 
-    g.append('g')
-      .attr('class', 'axis axis--x2')
-      .call(d3.axisTop(x2));
 
     g.append('g')
       .attr('class', 'axis axis--y')
@@ -141,7 +132,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
       .attr('y', 6)
       .attr('dy', '0.71em')
       .attr('fill', '#000')
-      .text('Story Points');
+      .text('Percentage');
 
     const estimate = g.selectAll('.estimate')
       .data(estimates)
@@ -178,10 +169,10 @@ export class DiffChartComponent implements OnInit, OnChanges {
   }
 
   update() {
-    const svg = d3.select('.diff-chart-1').select('svg');
+    const svg = d3.select('.diff-chart-2').select('svg');
     svg.remove();
 
-    d3.select('.diff-chart-1').append('svg').attr('width', this.width).attr('height', this.height)
+    d3.select('.diff-chart-2').append('svg').attr('width', this.width).attr('height', this.height)
     this.load();
   }
 

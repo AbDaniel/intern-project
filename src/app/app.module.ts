@@ -18,6 +18,7 @@ import { USER_PROVIDER, USERS_API } from './users';
 import {ProjectService} from './projects/services/projects.service';
 import { DiffChartComponent } from './charts/diff-chart/diff-chart.component';
 import {SprintDetailsService} from "./charts/diff-chart/sprint-details-service";
+import {LineChartComponent} from "./charts/line-chart/line-chart.component";
 
 const httpInterceptorProviders: Type<any>[] = [
   RequestInterceptor,
@@ -32,6 +33,7 @@ export function getAPI(): string {
     AppComponent,
     routedComponents,
     DiffChartComponent,
+    LineChartComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     AppRoutingModule,
