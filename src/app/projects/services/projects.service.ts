@@ -36,13 +36,6 @@ export class ProjectService {
       .catch(this.handleError);
   }
 
-  getProjectsSlowly(): Promise<Project[]> {
-    return new Promise(resolve => {
-      // Simulate server latency with 2 second delay
-      setTimeout(() => resolve(this.getProjects()), 2000);
-    });
-  }
-
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);

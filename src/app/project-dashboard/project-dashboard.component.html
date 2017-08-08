@@ -45,7 +45,7 @@
           <md-card-title>Velocity Percentage</md-card-title>
           <md-divider></md-divider>
           <div *ngIf="project">
-            <qs-line-chart [project]="project" [day]="day"></qs-line-chart>
+            <qs-line-chart [project]="project" [day]="day" [chartClassName]="'velocity-chart'"></qs-line-chart>
           </div>
         </md-card>
       </div>

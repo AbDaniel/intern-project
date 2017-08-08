@@ -19,6 +19,7 @@ export class LineChartComponent implements OnInit, OnChanges {
   sprints: JSON[];
   width;
   height;
+  @Input() chartClassName;
   @Input() day;
   @Input() project: Project;
 
@@ -41,12 +42,12 @@ export class LineChartComponent implements OnInit, OnChanges {
 
   async load(): Promise<void> {
     try {
-      this._loadingService.register('diff-chart.list');
+      this._loadingService.register(`${this.chartClassName}.list`);
       this.sprints = await this.sprintDetailsService.search(this.project._id, this.day);
     } finally {
       console.log(this.sprints);
       this.render();
-      this._loadingService.resolve('diff-chart.list');
+      this._loadingService.resolve(`${this.chartClassName}.list`);
     }
   }
 
@@ -54,12 +55,11 @@ export class LineChartComponent implements OnInit, OnChanges {
   render() {
     const sprints = this.sprints;
 
-    const svg = d3.select('.diff-chart-2').select('svg'),
+    const svg = d3.select(`.${this.chartClassName}`).select('svg'),
       margin = {top: 20, right: 80, bottom: 30, left: 50},
       width = +svg.attr('width') - margin.left - margin.right,
       height = +svg.attr('height') - margin.top - margin.bottom,
       g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-    console.log('Hellllllll');
 
     this.width = +svg.attr('width');
     this.height = +svg.attr('height');
@@ -169,10 +169,10 @@ export class LineChartComponent implements OnInit, OnChanges {
   }
 
   update() {
-    const svg = d3.select('.diff-chart-2').select('svg');
+    const svg = d3.select(`.${this.chartClassName}`).select('svg');
     svg.remove();
 
-    d3.select('.diff-chart-2').append('svg').attr('width', this.width).attr('height', this.height)
+    d3.select(`.${this.chartClassName}`).append('svg').attr('width', this.width).attr('height', this.height)
     this.load();
   }
 
