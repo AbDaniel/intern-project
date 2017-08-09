@@ -130,7 +130,7 @@ export class GitLineChartComponent implements OnInit, OnChanges {
       .attr('y', 6)
       .attr('dy', '0.71em')
       .attr('fill', '#000')
-      .text('Percentage');
+      .text('Lines Of Code');
 
     const estimate = g.selectAll('.estimate')
       .data(estimates)
