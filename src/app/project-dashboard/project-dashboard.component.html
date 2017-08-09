@@ -50,5 +50,16 @@
         </md-card>
       </div>
     </div>
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Story Points Completed per Sprint by Team Member</md-card-title>
+          <md-divider></md-divider>
+          <div *ngIf="project">
+            <qs-line-chart-interactive [project]="project" [day]="day" [chartClassName]="'velocity-chart-2'"></qs-line-chart-interactive>
+          </div>
+        </md-card>
+      </div>
+    </div>
   </td-layout-manage-list>
 </td-layout-nav>

@@ -7,13 +7,13 @@ import {Project} from '../../projects/services/projects.service';
 import {SprintDetailsService} from '../diff-chart/sprint-details-service';
 
 @Component({
-  selector: 'qs-line-chart',
-  templateUrl: './line-chart.component.html',
+  selector: 'qs-line-chart-interactive',
+  templateUrl: './line-chart-interactive.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./line-chart.component.scss']
+  styleUrls: ['./line-chart-interactive.component.scss']
 })
 
-export class LineChartComponent implements OnInit, OnChanges {
+export class LineChartInteractiveComponent implements OnInit, OnChanges {
   initExecuted = false;
   title = 'app';
   sprints: JSON[];
@@ -43,7 +43,7 @@ export class LineChartComponent implements OnInit, OnChanges {
   async load(): Promise<void> {
     try {
       this._loadingService.register(`${this.chartClassName}.list`);
-      this.sprints = await this.sprintDetailsService.searchVelcoity(this.project._id, this.day);
+      this.sprints = await this.sprintDetailsService.searchUsers(this.project._id, this.day);
     } finally {
       console.log(this.sprints);
       this.render();
@@ -81,15 +81,15 @@ export class LineChartComponent implements OnInit, OnChanges {
       });
 
     const keys = d3.keys(sprints[0])
-      .filter((key: string) => key !== <string>'Committed'
-      && key !== <string>'date' && key !== <string>'Completed' && key !== <string>'name');
+      .filter((key: string) => key !== <string>'date' && key !== <string>'name');
 
     const estimates = keys.map(function (id) {
       return {
         id: id,
         values: sprints.map(function (d) {
           return {date: parseTime(d['date']), points: +d[id]};
-        })
+        }),
+        visible: true,
       };
     });
 
@@ -129,7 +129,7 @@ export class LineChartComponent implements OnInit, OnChanges {
       .attr('y', 6)
       .attr('dy', '0.71em')
       .attr('fill', '#000')
-      .text('Percentage');
+      .text('Story Points');
 
     const estimate = g.selectAll('.estimate')
       .data(estimates)
@@ -146,21 +146,65 @@ export class LineChartComponent implements OnInit, OnChanges {
         return z(d.id);
       });
 
+    // estimate.append('text')
+    //   .datum(function (d) {
+    //     return {
+    //       id: d.id, value: d.values[d.values.length - 1]
+    //     };
+    //   })
+    //   .attr('transform', function (d) {
+    //     return 'translate(' + x(d.value.date) + ',' + y(d.value.points) + ')';
+    //   })
+    //   .attr('x', 3)
+    //   .attr('dy', '0.35em')
+    //   .style('font', '10px sans-serif')
+    //   .text(function (d) {
+    //     return d.id;
+    //   });
+
+    const legendSpace = 450 / keys.length;
+
+    estimate.append('rect')
+      .attr('width', 10)
+      .attr('height', 10)
+      .attr('x', width + (margin.right / 3) - 15)
+      .attr('y', function (d, i) {
+        return (legendSpace) + i * (legendSpace) - 8;
+      })  // spacing
+      .attr('fill', function (d) {
+        return d.visible ? z(d.id) : '#F1F1F2'; // If array key "visible" = true then color rect, if not then make it grey
+      })
+      .attr('class', 'legend-box')
+
+      .on('click', function (d) { // On click make d.visible
+        d.visible = !d.visible; // If array key for this data selection is "visible" = true then make it false, if false then make it true
+
+        estimate.select('path')
+          .transition()
+          .attr('d', function (ds) {
+            return ds.visible ? line(ds.values) : null; // If d.visible is true then draw line for this d selection
+          });
+        let count = 0;
+        estimate.select('rect')
+          .transition()
+          .attr('fill', function (d) {
+            const color = d.visible ? z(d.id) : '#F1F1F2';
+            count += 1;
+            console.log('exec' + count);
+            return color;
+          });
+      });
+
     estimate.append('text')
-      .datum(function (d) {
-        return {
-          id: d.id, value: d.values[d.values.length - 1]
-        };
-      })
-      .attr('transform', function (d) {
-        return 'translate(' + x(d.value.date) + ',' + y(d.value.points) + ')';
-      })
-      .attr('x', 3)
-      .attr('dy', '0.35em')
+      .attr('x', width + (margin.right / 3))
       .style('font', '10px sans-serif')
+      .attr('y', function (d, i) {
+        return (legendSpace) + i * (legendSpace);
+      })
       .text(function (d) {
         return d.id;
       });
+
 
     this.initExecuted = true;
   }

@@ -82,7 +82,9 @@ export class DiffChartComponent implements OnInit, OnChanges {
         return y(d['points']);
       });
 
-    const keys = ['completed_estimate', 'not_completed_estimate'];
+    const keys = d3.keys(sprints[0])
+    .filter((key: string) => key !== <string>'Mean'
+    && key !== <string>'date' && key !== <string>'Percentage Completed' && key !== <string>'name');
 
     const estimates = keys.map(function (id) {
       return {
@@ -92,11 +94,6 @@ export class DiffChartComponent implements OnInit, OnChanges {
         })
       };
     });
-
-    const keyMap = {
-      'completed_estimate' : 'Completed',
-      'not_completed_estimate' : 'Committed'
-    };
 
 
     x.domain(d3.extent(sprints, function (d) {
@@ -171,7 +168,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
       .attr('dy', '0.35em')
       .style('font', '10px sans-serif')
       .text(function (d) {
-        return keyMap[d.id];
+        return d.id;
       });
 
     this.initExecuted = true;
