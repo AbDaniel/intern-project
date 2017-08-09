@@ -75,5 +75,17 @@
       </div>
     </div>
 
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Jenkins Data</md-card-title>
+          <md-divider></md-divider>
+          <div *ngIf="project">
+            <qs-jenkins-line-chart [project]="project" [day]="day" [chartClassName]="'jenkins'"></qs-jenkins-line-chart>
+          </div>
+        </md-card>
+      </div>
+    </div>
+
   </td-layout-manage-list>
 </td-layout-nav>

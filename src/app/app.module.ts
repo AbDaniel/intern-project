@@ -22,6 +22,8 @@ import {LineChartComponent} from './charts/line-chart/line-chart.component';
 import {LineChartInteractiveComponent} from './charts/line-chart-interactive/line-chart-interactive.component';
 import {GitLineChartComponent} from './charts/git-line-chart/git-line-chart.component';
 import {CommitService} from './project-dashboard/services/commit.service';
+import {JenkinsLineChartComponent} from './charts/jenkins-line-chart/jenkins-line-chart.component';
+import {JenkinsService} from './project-dashboard/services/jenkins.service';
 
 const httpInterceptorProviders: Type<any>[] = [
   RequestInterceptor,
@@ -39,6 +41,7 @@ export function getAPI(): string {
     LineChartComponent,
     LineChartInteractiveComponent,
     GitLineChartComponent,
+    JenkinsLineChartComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     AppRoutingModule,
@@ -58,6 +61,7 @@ export function getAPI(): string {
     ProjectService,
     SprintDetailsService,
     CommitService,
+    JenkinsService,
     Title, {
       provide: USERS_API, useFactory: getAPI,
     }, USER_PROVIDER,
