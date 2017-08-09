@@ -96,6 +96,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
     });
 
 
+    //noinspection TypeScriptUnresolvedFunction
     x.domain(d3.extent(sprints, function (d) {
       return parseTime(d['date']);
     }));
@@ -104,6 +105,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
       return d['name'];
     }));
 
+    //noinspection TypeScriptUnresolvedFunction
     y.domain([
       d3.min(estimates, function (c) {
         return d3.min(c.values, function (d) {
@@ -162,6 +164,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
         };
       })
       .attr('transform', function (d) {
+        //noinspection TypeScriptValidateTypes
         return 'translate(' + x(d.value.date) + ',' + y(d.value.points) + ')';
       })
       .attr('x', 3)

@@ -94,10 +94,12 @@ export class LineChartInteractiveComponent implements OnInit, OnChanges {
     });
 
 
+    //noinspection TypeScriptUnresolvedFunction
     x.domain(d3.extent(sprints, function (d) {
       return parseTime(d['date']);
     }));
 
+    //noinspection TypeScriptUnresolvedFunction
     y.domain([
       d3.min(estimates, function (c) {
         return d3.min(c.values, function (d) {
