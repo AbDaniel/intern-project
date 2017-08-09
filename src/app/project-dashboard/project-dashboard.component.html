@@ -50,6 +50,7 @@
         </md-card>
       </div>
     </div>
+
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
       <div flex-gt-sm="120">
         <md-card>
@@ -61,5 +62,18 @@
         </md-card>
       </div>
     </div>
+
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Git Commit Activity by Sprints</md-card-title>
+          <md-divider></md-divider>
+          <div *ngIf="project">
+            <qs-git-line-chart [project]="project" [day]="day" [chartClassName]="'velocity-chart-3'"></qs-git-line-chart>
+          </div>
+        </md-card>
+      </div>
+    </div>
+
   </td-layout-manage-list>
 </td-layout-nav>

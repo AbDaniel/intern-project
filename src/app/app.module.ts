@@ -20,6 +20,8 @@ import { DiffChartComponent } from './charts/diff-chart/diff-chart.component';
 import {SprintDetailsService} from './charts/diff-chart/sprint-details-service';
 import {LineChartComponent} from './charts/line-chart/line-chart.component';
 import {LineChartInteractiveComponent} from './charts/line-chart-interactive/line-chart-interactive.component';
+import {GitLineChartComponent} from './charts/git-line-chart/git-line-chart.component';
+import {CommitService} from './project-dashboard/services/commit.service';
 
 const httpInterceptorProviders: Type<any>[] = [
   RequestInterceptor,
@@ -36,6 +38,7 @@ export function getAPI(): string {
     DiffChartComponent,
     LineChartComponent,
     LineChartInteractiveComponent,
+    GitLineChartComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     AppRoutingModule,
@@ -54,6 +57,7 @@ export function getAPI(): string {
     httpInterceptorProviders,
     ProjectService,
     SprintDetailsService,
+    CommitService,
     Title, {
       provide: USERS_API, useFactory: getAPI,
     }, USER_PROVIDER,
