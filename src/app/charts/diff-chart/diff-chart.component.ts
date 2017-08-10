@@ -28,7 +28,6 @@ export class DiffChartComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    console.log(this.project);
     this.load();
   }
 
@@ -44,7 +43,6 @@ export class DiffChartComponent implements OnInit, OnChanges {
       this._loadingService.register('diff-chart.list');
       this.sprints = await this.sprintDetailsService.search(this.project._id, this.day);
     } finally {
-      console.log(this.sprints);
       this.render();
       this._loadingService.resolve('diff-chart.list');
     }
@@ -59,7 +57,6 @@ export class DiffChartComponent implements OnInit, OnChanges {
       width = +svg.attr('width') - margin.left - margin.right,
       height = +svg.attr('height') - margin.top - margin.bottom,
       g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-    console.log('Hellllllll');
 
     this.width = +svg.attr('width');
     this.height = +svg.attr('height');

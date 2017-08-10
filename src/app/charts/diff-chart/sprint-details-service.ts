@@ -19,23 +19,17 @@ export class SprintDetailsService {
   search(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.sprintsUrl}/${boardId}/${daysAgo}`;
 
-    console.log(url);
-
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }
 
   searchUsers(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.usersUrl}/${boardId}/${daysAgo}`;
 
-    console.log(url);
-
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }
 
   searchVelcoity(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.velocityUrl}/${boardId}/${daysAgo}`;
-
-    console.log(url);
 
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }

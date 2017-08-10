@@ -29,7 +29,6 @@ export class JenkinsLineChartComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    console.log(this.project);
     this.load();
   }
 
@@ -45,7 +44,6 @@ export class JenkinsLineChartComponent implements OnInit, OnChanges {
       this._loadingService.register(`${this.chartClassName}.list`);
       this.sprints = await this.jenkinsService.search(this.project._id, this.day);
     } finally {
-      console.log(this.sprints);
       this.render();
       this._loadingService.resolve(`${this.chartClassName}.list`);
     }

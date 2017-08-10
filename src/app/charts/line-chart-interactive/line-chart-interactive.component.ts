@@ -29,7 +29,6 @@ export class LineChartInteractiveComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    console.log(this.project);
     this.load();
   }
 
@@ -45,7 +44,6 @@ export class LineChartInteractiveComponent implements OnInit, OnChanges {
       this._loadingService.register(`${this.chartClassName}.list`);
       this.sprints = await this.sprintDetailsService.searchUsers(this.project._id, this.day);
     } finally {
-      console.log(this.sprints);
       this.render();
       this._loadingService.resolve(`${this.chartClassName}.list`);
     }
@@ -186,13 +184,10 @@ export class LineChartInteractiveComponent implements OnInit, OnChanges {
           .attr('d', function (ds) {
             return ds.visible ? line(ds.values) : null; // If d.visible is true then draw line for this d selection
           });
-        let count = 0;
         estimate.select('rect')
           .transition()
           .attr('fill', function (d) {
             const color = d.visible ? z(d.id) : '#F1F1F2';
-            count += 1;
-            console.log('exec' + count);
             return color;
           });
       });

@@ -16,8 +16,6 @@ export class CommitService {
   search(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.commitsTimeLineUrl}/${boardId}/${daysAgo}`;
 
-    console.log(url);
-
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }
 

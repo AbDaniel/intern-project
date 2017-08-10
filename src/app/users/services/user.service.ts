@@ -23,6 +23,7 @@ export class UserService extends RESTService<IUser> {
   }
 
   staticQuery(): Observable<IUser[]> {
+    //noinspection TypeScriptValidateTypes
     return this._http.get('data/users.json')
     .map((res: Response) => {
       return res.json();
