@@ -92,5 +92,21 @@
       </div>
     </div>
 
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Commits Count Timeline</md-card-title>
+          <md-divider></md-divider>
+          <ng-template tdLoading="{{commitsCountChartName}}">
+            <div *ngIf="commits">
+              <qs-line-chart [sprints]="commits"
+                             [chartClassName]="commitsCountChartName"
+                             [yAxisTile]="commitsCountChartYAxisTitle"></qs-line-chart>
+            </div>
+          </ng-template>
+        </md-card>
+      </div>
+    </div>
+
   </td-layout-manage-list>
 </td-layout-nav>
