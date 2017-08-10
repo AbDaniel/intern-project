@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
 
 import * as d3 from 'd3';
-import {SprintDetailsService} from './sprint-details-service';
+import {SprintDetailsService} from '../../project-dashboard/services/sprint-details-service';
 import {Title} from '@angular/platform-browser';
 import {TdLoadingService} from '@covalent/core';
 import {Project} from '../../projects/services/projects.service';

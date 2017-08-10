@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import {Title} from '@angular/platform-browser';
 import {TdLoadingService} from '@covalent/core';
 import {Project} from '../../projects/services/projects.service';
-import {SprintDetailsService} from '../diff-chart/sprint-details-service';
+import {SprintDetailsService} from '../../project-dashboard/services/sprint-details-service';
 
 @Component({
   selector: 'qs-line-chart-interactive',

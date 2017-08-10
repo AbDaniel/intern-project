@@ -3,7 +3,7 @@ import {Title} from '@angular/platform-browser';
 import {TdLoadingService, TdMediaService} from '@covalent/core';
 import {Project, ProjectService} from '../projects/services/projects.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {SprintDetailsService} from '../charts/diff-chart/sprint-details-service';
+import {SprintDetailsService} from './services/sprint-details-service';
 import {CommitService} from './services/commit.service';
 
 @Component({
