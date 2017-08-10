@@ -17,7 +17,7 @@
         <span>{{project.name}}</span>
       </div>
       <span flex></span>
-      <md-select placeholder="Last 1 year" [(ngModel)]="day">
+      <md-select placeholder="Last 1 year" [(ngModel)]="day" (change)="updateFi()">
         <md-option *ngFor="let d of days" [value]="d.value">{{ d.text }}</md-option>
       </md-select>
     </div>
@@ -43,9 +43,13 @@
         <md-card>
           <md-card-title>Velocity Percentage</md-card-title>
           <md-divider></md-divider>
-          <div *ngIf="project">
-            <qs-line-chart [project]="project" [day]="day" [chartClassName]="'velocity-chart'"></qs-line-chart>
-          </div>
+          <ng-template tdLoading="{{velocityChartName}}">
+            <div *ngIf="sprints">
+              <qs-line-chart [sprints]="sprints"
+                             [chartClassName]="velocityChartName"
+                             [yAxisTile]="velocityChartYAxisTitle"></qs-line-chart>
+            </div>
+          </ng-template>
         </md-card>
       </div>
     </div>
@@ -56,7 +60,8 @@
           <md-card-title>Story Points Completed per Sprint by Team Member</md-card-title>
           <md-divider></md-divider>
           <div *ngIf="project">
-            <qs-line-chart-interactive [project]="project" [day]="day" [chartClassName]="'velocity-chart-2'"></qs-line-chart-interactive>
+            <qs-line-chart-interactive [project]="project" [day]="day"
+                                       [chartClassName]="'velocity-chart-2'"></qs-line-chart-interactive>
           </div>
         </md-card>
       </div>
@@ -68,7 +73,8 @@
           <md-card-title>Git Commit Activity by Sprints</md-card-title>
           <md-divider></md-divider>
           <div *ngIf="project">
-            <qs-git-line-chart [project]="project" [day]="day" [chartClassName]="'velocity-chart-3'"></qs-git-line-chart>
+            <qs-git-line-chart [project]="project" [day]="day"
+                               [chartClassName]="'velocity-chart-3'"></qs-git-line-chart>
           </div>
         </md-card>
       </div>

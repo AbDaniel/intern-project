@@ -1,10 +1,8 @@
-import {Component, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, ViewEncapsulation} from '@angular/core';
 
 import * as d3 from 'd3';
 import {Title} from '@angular/platform-browser';
 import {TdLoadingService} from '@covalent/core';
-import {Project} from '../../projects/services/projects.service';
-import {SprintDetailsService} from '../diff-chart/sprint-details-service';
 
 @Component({
   selector: 'qs-line-chart',
@@ -13,41 +11,31 @@ import {SprintDetailsService} from '../diff-chart/sprint-details-service';
   styleUrls: ['./line-chart.component.scss']
 })
 
-export class LineChartComponent implements OnInit, OnChanges {
+export class LineChartComponent implements OnChanges, AfterViewInit {
   initExecuted = false;
   title = 'app';
-  sprints: JSON[];
+
   width;
   height;
-  @Input() chartClassName;
-  @Input() day;
-  @Input() project: Project;
+  @Input() yAxisTile;
 
-  constructor(private sprintDetailsService: SprintDetailsService,
-              private _titleService: Title,
+  @Input() sprints: JSON[];
+  @Input() chartClassName;
+
+  constructor(private _titleService: Title,
               private _loadingService: TdLoadingService) {
   }
 
-  ngOnInit() {
-    console.log(this.project);
-    this.load();
-  }
-
-  ngOnChanges(changes: any) {
-    this.day = changes.day.currentValue;
-    if (this.initExecuted) {
-      this.update();
+  ngAfterViewInit() {
+    if (this.sprints) {
+      this.render()
     }
   }
 
-  async load(): Promise<void> {
-    try {
-      this._loadingService.register(`${this.chartClassName}.list`);
-      this.sprints = await this.sprintDetailsService.searchVelcoity(this.project._id, this.day);
-    } finally {
-      console.log(this.sprints);
-      this.render();
-      this._loadingService.resolve(`${this.chartClassName}.list`);
+  ngOnChanges(changes: any) {
+    this.sprints = changes.sprints.currentValue;
+    if (this.initExecuted) {
+      this.update();
     }
   }
 
@@ -99,19 +87,21 @@ export class LineChartComponent implements OnInit, OnChanges {
       return parseTime(d['date']);
     }));
 
+    const min = d3.min(estimates, function (c) {
+      return d3.min(c.values, function (d) {
+        return d.points;
+      });
+    });
+
+    const max = d3.max(estimates, function (c) {
+      return d3.max(c.values, function (d) {
+        return d.points;
+      });
+    });
+
+
     //noinspection TypeScriptUnresolvedFunction
-    y.domain([
-      d3.min(estimates, function (c) {
-        return d3.min(c.values, function (d) {
-          return d.points;
-        });
-      }),
-      d3.max(estimates, function (c) {
-        return d3.max(c.values, function (d) {
-          return d.points;
-        });
-      })
-    ]);
+    y.domain([min, max]);
 
     z.domain(estimates.map(function (c) {
       return c.id;
@@ -131,7 +121,7 @@ export class LineChartComponent implements OnInit, OnChanges {
       .attr('y', 6)
       .attr('dy', '0.71em')
       .attr('fill', '#000')
-      .text('Percentage');
+      .text(this.yAxisTile);
 
     const estimate = g.selectAll('.estimate')
       .data(estimates)
@@ -172,8 +162,8 @@ export class LineChartComponent implements OnInit, OnChanges {
     const svg = d3.select(`.${this.chartClassName}`).select('svg');
     svg.remove();
 
-    d3.select(`.${this.chartClassName}`).append('svg').attr('width', this.width).attr('height', this.height)
-    this.load();
+    d3.select(`.${this.chartClassName}`).append('svg').attr('width', this.width).attr('height', this.height);
+    this.render();
   }
 
 }
