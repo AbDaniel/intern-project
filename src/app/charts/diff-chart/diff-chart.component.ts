@@ -71,7 +71,7 @@ export class DiffChartComponent implements OnInit, OnChanges {
     const y = d3.scaleLinear().range([height, 0]);
     const z = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const x2 = d3.scaleBand().range([0, width]);
+    // const x2 = d3.scaleBand().range([0, width]);
 
     const line = d3.line<any>()
       .curve(d3.curveBasis)
@@ -101,9 +101,9 @@ export class DiffChartComponent implements OnInit, OnChanges {
       return parseTime(d['date']);
     }));
 
-    x2.domain(sprints.map(function (d) {
-      return d['name'];
-    }));
+    // x2.domain(sprints.map(function (d) {
+    //   return d['name'];
+    // }));
 
     //noinspection TypeScriptUnresolvedFunction
     y.domain([
@@ -128,9 +128,9 @@ export class DiffChartComponent implements OnInit, OnChanges {
       .attr('transform', 'translate(0,' + height + ')')
       .call(d3.axisBottom(x));
 
-    g.append('g')
-      .attr('class', 'axis axis--x2')
-      .call(d3.axisTop(x2));
+    // g.append('g')
+    //   .attr('class', 'axis axis--x2')
+    //   .call(d3.axisTop(x2));
 
     g.append('g')
       .attr('class', 'axis axis--y')
