@@ -44,10 +44,10 @@
           <md-card-title>Velocity Percentage</md-card-title>
           <md-divider></md-divider>
           <ng-template tdLoading="{{velocityChartName}}">
-            <div *ngIf="sprints">
-              <qs-line-chart [sprints]="sprints"
+            <div *ngIf="velocity">
+              <qs-line-chart [data]="velocity"
                              [chartClassName]="velocityChartName"
-                             [yAxisTile]="velocityChartYAxisTitle"></qs-line-chart>
+                             [yAxisTile]="velocityChartYAxisTitle" [interactive]="false"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>
@@ -59,10 +59,13 @@
         <md-card>
           <md-card-title>Story Points Completed per Sprint by Team Member</md-card-title>
           <md-divider></md-divider>
-          <div *ngIf="project">
-            <qs-line-chart-interactive [project]="project" [day]="day"
-                                       [chartClassName]="'velocity-chart-2'"></qs-line-chart-interactive>
-          </div>
+          <ng-template tdLoading="{{sprintUsersChartName}}">
+            <div *ngIf="sprintUsers">
+              <qs-line-chart [data]="sprintUsers"
+                             [chartClassName]="sprintUsersChartName"
+                             [yAxisTile]="sprintUsersYAxisTitle" [interactive]="true"></qs-line-chart>
+            </div>
+          </ng-template>
         </md-card>
       </div>
     </div>
@@ -99,9 +102,26 @@
           <md-divider></md-divider>
           <ng-template tdLoading="{{commitsCountChartName}}">
             <div *ngIf="commits">
-              <qs-line-chart [sprints]="commits"
+              <qs-line-chart [data]="commits"
                              [chartClassName]="commitsCountChartName"
-                             [yAxisTile]="commitsCountChartYAxisTitle"></qs-line-chart>
+                             [yAxisTile]="commitsCountChartYAxisTitle" [interactive]="false"></qs-line-chart>
+            </div>
+          </ng-template>
+        </md-card>
+      </div>
+    </div>
+
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Commits Users Timeline</md-card-title>
+          <md-divider></md-divider>
+          <ng-template tdLoading="{{commitUsersChartName}}">
+            <div *ngIf="commitUsers">
+              <qs-line-chart [data]="commitUsers"
+                             [chartClassName]="commitUsersChartName"
+                             [yAxisTile]="commitUsersChartYAxisTitle"
+                             [interactive]="true"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>

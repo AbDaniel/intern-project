@@ -15,8 +15,10 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   private project: Project;
 
   day = 365;
-  sprints: JSON[];
+  velocity: JSON[];
   commits: JSON[];
+  sprintUsers: JSON[];
+  commitUsers: JSON[];
 
   days = [{value: 30, text: 'Last Month'},
     {value: 90, text: 'Last 3 Month'},
@@ -24,11 +26,17 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     {value: 365, text: 'Last 1 Year'},
     {value: 5000, text: 'All Time'}];
 
+  velocityChartYAxisTitle = 'Percentage';
   velocityChartName = 'velocityChart';
 
-  velocityChartYAxisTitle = 'Percentage';
-  commitsCountChartName = 'commitsCountChart';
   commitsCountChartYAxisTitle = 'Commits';
+  commitsCountChartName = 'commitsCountChart';
+
+  sprintUsersChartName = 'sprintUsersChart';
+  sprintUsersYAxisTitle = 'Story Points';
+
+  commitUsersChartName = 'commitUsersChart';
+  commitUsersChartYAxisTitle = 'Commits';
 
   constructor(private _titleService: Title,
               private _loadingService: TdLoadingService,
@@ -40,11 +48,11 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
               public media: TdMediaService) {
   }
 
-  async loadSprintDetails() {
+  async loadVelocityDetails() {
     const loader = `${this.velocityChartName}.load`;
     try {
       this._loadingService.register(loader);
-      this.sprints = await this.sprintDetailsService.searchVelcoity(this.project._id, this.day);
+      this.velocity = await this.sprintDetailsService.searchVelcoity(this.project._id, this.day);
     } finally {
       this._loadingService.resolve(loader);
     }
@@ -60,14 +68,36 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async loadSprintUsers() {
+    const loader = `${this.sprintUsersChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.sprintUsers = await this.sprintDetailsService.searchUsers(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
+  async loadCommitUsers() {
+    const loader = `${this.commitUsersChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.commitUsers = await this.commitService.commitsCountUsers(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
   ngOnInit() {
     this._titleService.setTitle('Projects');
     this.route.paramMap
       .switchMap((params: ParamMap) => this._projectService.getProject(+params.get('id')))
       .subscribe(project => {
         this.project = project;
-        this.loadSprintDetails();
+        this.loadVelocityDetails();
         this.loadCommitsCount();
+        this.loadSprintUsers();
+        this.loadCommitUsers();
       });
   }
 
@@ -80,7 +110,9 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   }
 
   updateFi() {
-    this.loadSprintDetails();
+    this.loadVelocityDetails();
     this.loadCommitsCount();
+    this.loadSprintUsers();
+    this.loadCommitUsers();
   }
 }

@@ -19,21 +19,22 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
   height;
   @Input() yAxisTile;
 
-  @Input() sprints: JSON[];
+  @Input() data: JSON[];
   @Input() chartClassName;
+  @Input() interactive: boolean;
 
   constructor(private _titleService: Title,
               private _loadingService: TdLoadingService) {
   }
 
   ngAfterViewInit() {
-    if (this.sprints) {
+    if (this.data) {
       this.render()
     }
   }
 
   ngOnChanges(changes: any) {
-    this.sprints = changes.sprints.currentValue;
+    this.data = changes.data.currentValue;
     if (this.initExecuted) {
       this.update();
     }
@@ -41,7 +42,7 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
 
 
   render() {
-    const sprints = this.sprints;
+    const sprints = this.data;
 
     const svg = d3.select(`.${this.chartClassName}`).select('svg'),
       margin = {top: 20, right: 80, bottom: 30, left: 50},
@@ -77,7 +78,8 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
         id: id,
         values: sprints.map(function (d) {
           return {date: parseTime(d['date']), points: +d[id]};
-        })
+        }),
+        visible: true,
       };
     });
 
@@ -138,23 +140,65 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
         return z(d.id);
       });
 
-    estimate.append('text')
-      .datum(function (d) {
-        return {
-          id: d.id, value: d.values[d.values.length - 1]
-        };
-      })
-      .attr('transform', function (d) {
-        //noinspection TypeScriptValidateTypes
-        return 'translate(' + x(d.value.date) + ',' + y(d.value.points) + ')';
-      })
-      .attr('x', 3)
-      .attr('dy', '0.35em')
-      .style('font', '10px sans-serif')
-      .text(function (d) {
-        return d.id;
-      });
+    if (this.interactive) {
+      const legendSpace = 450 / keys.length;
 
+      estimate.append('rect')
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('x', width + (margin.right / 3) - 15)
+        .attr('y', function (d, i) {
+          return (legendSpace) + i * (legendSpace) - 8;
+        })  // spacing
+        .attr('fill', function (d) {
+          return d.visible ? z(d.id) : '#F1F1F2'; // If array key "visible" = true then color rect, if not then make it grey
+        })
+        .attr('class', 'legend-box')
+
+        .on('click', function (d) { // On click make d.visible
+          d.visible = !d.visible; // If array key for this data selection is "visible" = true then make it false, if false then make it true
+
+          estimate.select('path')
+            .transition()
+            .attr('d', function (ds) {
+              return ds.visible ? line(ds.values) : null; // If d.visible is true then draw line for this d selection
+            });
+          estimate.select('rect')
+            .transition()
+            .attr('fill', function (d) {
+              const color = d.visible ? z(d.id) : '#F1F1F2';
+              return color;
+            });
+        });
+
+      estimate.append('text')
+        .attr('x', width + (margin.right / 3))
+        .style('font', '10px sans-serif')
+        .attr('y', function (d, i) {
+          return (legendSpace) + i * (legendSpace);
+        })
+        .text(function (d) {
+          return d.id;
+        });
+
+    } else {
+      estimate.append('text')
+        .datum(function (d) {
+          return {
+            id: d.id, value: d.values[d.values.length - 1]
+          };
+        })
+        .attr('transform', function (d) {
+          //noinspection TypeScriptValidateTypes
+          return 'translate(' + x(d.value.date) + ',' + y(d.value.points) + ')';
+        })
+        .attr('x', 3)
+        .attr('dy', '0.35em')
+        .style('font', '10px sans-serif')
+        .text(function (d) {
+          return d.id;
+        });
+    }
     this.initExecuted = true;
   }
 
