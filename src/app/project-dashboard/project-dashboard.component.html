@@ -28,9 +28,11 @@
           <md-card-title>Sprint Velocity - JIRA</md-card-title>
           <md-divider></md-divider>
           <md-nav-list class="will-load item-list">
-            <ng-template tdLoading="items.load">
-              <div *ngIf="project">
-                <qs-diff-chart [project]="project" [day]="day"></qs-diff-chart>
+            <ng-template tdLoading="{{sprintChartName}}">
+              <div *ngIf="sprints">
+                <qs-line-chart [data]="sprints"
+                               [chartClassName]="sprintChartName"
+                               [yAxisTile]="sprintChartYAxisTitle" [interactive]="false"></qs-line-chart>
               </div>
             </ng-template>
           </md-nav-list>

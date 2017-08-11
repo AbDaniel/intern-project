@@ -70,8 +70,7 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
       });
 
     const keys = d3.keys(sprints[0])
-      .filter((key: string) => key !== <string>'Committed'
-      && key !== <string>'date' && key !== <string>'Completed' && key !== <string>'name');
+      .filter((key: string) => key !== <string>'date');
 
     const estimates = keys.map(function (id) {
       return {

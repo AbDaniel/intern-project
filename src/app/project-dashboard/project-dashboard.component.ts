@@ -15,10 +15,12 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   private project: Project;
 
   day = 365;
+
   velocity: JSON[];
   commits: JSON[];
   sprintUsers: JSON[];
   commitUsers: JSON[];
+  sprints: JSON[];
 
   days = [{value: 30, text: 'Last Month'},
     {value: 90, text: 'Last 3 Month'},
@@ -38,6 +40,9 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   commitUsersChartName = 'commitUsersChart';
   commitUsersChartYAxisTitle = 'Commits';
 
+  sprintChartName = 'sprintChart';
+  sprintChartYAxisTitle = 'Story Points';
+
   constructor(private _titleService: Title,
               private _loadingService: TdLoadingService,
               private _projectService: ProjectService,
@@ -53,6 +58,16 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     try {
       this._loadingService.register(loader);
       this.velocity = await this.sprintDetailsService.searchVelcoity(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
+  async loadSprintDetails() {
+    const loader = `${this.sprintChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.sprints = await this.sprintDetailsService.search(this.project._id, this.day);
     } finally {
       this._loadingService.resolve(loader);
     }
@@ -98,6 +113,7 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
         this.loadCommitsCount();
         this.loadSprintUsers();
         this.loadCommitUsers();
+        this.loadSprintDetails();
       });
   }
 
@@ -114,5 +130,6 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     this.loadCommitsCount();
     this.loadSprintUsers();
     this.loadCommitUsers();
+    this.loadSprintDetails();
   }
 }
