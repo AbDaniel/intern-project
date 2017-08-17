@@ -130,5 +130,22 @@
       </div>
     </div>
 
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Test Coverage</md-card-title>
+          <md-divider></md-divider>
+          <ng-template tdLoading="{{testCoverageChartName}}">
+            <div *ngIf="testCoverage">
+              <qs-line-chart [data]="testCoverage"
+                             [chartClassName]="testCoverageChartName"
+                             [yAxisTile]="testCoverageChartYAxisTitle"
+                             [interactive]="true"></qs-line-chart>
+            </div>
+          </ng-template>
+        </md-card>
+      </div>
+    </div>
+
   </td-layout-manage-list>
 </td-layout-nav>

@@ -5,6 +5,7 @@ import {Project, ProjectService} from '../projects/services/projects.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {SprintDetailsService} from './services/sprint-details-service';
 import {CommitService} from './services/commit.service';
+import {JenkinsService} from "./services/jenkins.service";
 
 @Component({
   selector: 'qs-project-dashboard',
@@ -43,12 +44,17 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   sprintChartName = 'sprintChart';
   sprintChartYAxisTitle = 'Story Points';
 
+  testCoverageChartName = 'testCoverageChart';
+  testCoverageChartYAxisTitle = 'Percentage';
+  testCoverage: JSON[];
+
   constructor(private _titleService: Title,
               private _loadingService: TdLoadingService,
               private _projectService: ProjectService,
               private _changeDetectorRef: ChangeDetectorRef,
               private sprintDetailsService: SprintDetailsService,
               private commitService: CommitService,
+              private jenkinsService: JenkinsService,
               private route: ActivatedRoute,
               public media: TdMediaService) {
   }
@@ -103,6 +109,16 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async loadTestCoverage() {
+    const loader = `${this.testCoverageChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.testCoverage = await this.jenkinsService.testCoverage(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
   ngOnInit() {
     this._titleService.setTitle('Projects');
     this.route.paramMap
@@ -114,6 +130,7 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
         this.loadSprintUsers();
         this.loadCommitUsers();
         this.loadSprintDetails();
+        this.loadTestCoverage();
       });
   }
 
@@ -131,5 +148,6 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     this.loadSprintUsers();
     this.loadCommitUsers();
     this.loadSprintDetails();
+    this.loadTestCoverage();
   }
 }
