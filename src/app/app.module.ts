@@ -22,6 +22,7 @@ import {GitLineChartComponent} from './charts/git-line-chart/git-line-chart.comp
 import {CommitService} from './project-dashboard/services/commit.service';
 import {JenkinsLineChartComponent} from './charts/jenkins-line-chart/jenkins-line-chart.component';
 import {JenkinsService} from './project-dashboard/services/jenkins.service';
+import {IssuesService} from "./project-dashboard/services/issues.service";
 
 const httpInterceptorProviders: Type<any>[] = [
   RequestInterceptor,
@@ -58,6 +59,7 @@ export function getAPI(): string {
     SprintDetailsService,
     CommitService,
     JenkinsService,
+    IssuesService,
     Title, {
       provide: USERS_API, useFactory: getAPI,
     }, USER_PROVIDER,

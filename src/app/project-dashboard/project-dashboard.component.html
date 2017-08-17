@@ -147,5 +147,22 @@
       </div>
     </div>
 
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="120">
+        <md-card>
+          <md-card-title>Issues Timeline</md-card-title>
+          <md-divider></md-divider>
+          <ng-template tdLoading="{{issuesChartName}}">
+            <div *ngIf="issues">
+              <qs-line-chart [data]="issues"
+                             [chartClassName]="issuesChartName"
+                             [yAxisTile]="issuesChartYAxisTitle"
+                             [interactive]="true"></qs-line-chart>
+            </div>
+          </ng-template>
+        </md-card>
+      </div>
+    </div>
+
   </td-layout-manage-list>
 </td-layout-nav>

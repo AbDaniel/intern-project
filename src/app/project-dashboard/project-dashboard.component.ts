@@ -5,7 +5,8 @@ import {Project, ProjectService} from '../projects/services/projects.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {SprintDetailsService} from './services/sprint-details-service';
 import {CommitService} from './services/commit.service';
-import {JenkinsService} from "./services/jenkins.service";
+import {JenkinsService} from './services/jenkins.service';
+import {IssuesService} from "./services/issues.service";
 
 @Component({
   selector: 'qs-project-dashboard',
@@ -48,6 +49,10 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   testCoverageChartYAxisTitle = 'Percentage';
   testCoverage: JSON[];
 
+  issuesChartName = 'issuesChart';
+  issuesChartYAxisTitle = 'Count';
+  issues: JSON[];
+
   constructor(private _titleService: Title,
               private _loadingService: TdLoadingService,
               private _projectService: ProjectService,
@@ -55,6 +60,7 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
               private sprintDetailsService: SprintDetailsService,
               private commitService: CommitService,
               private jenkinsService: JenkinsService,
+              private issuesService: IssuesService,
               private route: ActivatedRoute,
               public media: TdMediaService) {
   }
@@ -119,6 +125,16 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async loadIssues() {
+    const loader = `${this.issuesChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.issues = await this.issuesService.search(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
   ngOnInit() {
     this._titleService.setTitle('Projects');
     this.route.paramMap
@@ -131,6 +147,7 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
         this.loadCommitUsers();
         this.loadSprintDetails();
         this.loadTestCoverage();
+        this.loadIssues();
       });
   }
 
@@ -149,5 +166,6 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     this.loadCommitUsers();
     this.loadSprintDetails();
     this.loadTestCoverage();
+    this.loadIssues();
   }
 }
