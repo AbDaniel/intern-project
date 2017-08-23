@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnChanges, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, HostListener, Input, NgZone, OnChanges, ViewEncapsulation} from '@angular/core';
 
 import * as d3 from 'd3';
 import {Title} from '@angular/platform-browser';
@@ -22,15 +22,23 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
   @Input() data: JSON[];
   @Input() chartClassName;
   @Input() interactive: boolean;
+  @Input() forecast: boolean;
 
   constructor(private _titleService: Title,
-              private _loadingService: TdLoadingService) {
+              private _loadingService: TdLoadingService,
+              private ngZone: NgZone) {
   }
 
   ngAfterViewInit() {
     if (this.data) {
       this.render()
     }
+
+    window.onresize = (e) => {
+      this.ngZone.run(() => {
+        this.update();
+      });
+    };
   }
 
   ngOnChanges(changes: any) {
@@ -44,14 +52,25 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
   render() {
     const sprints = this.data;
 
+    this.width = 960;
+    this.height = 500;
+
+    const offsetHeight = document.getElementsByClassName(`${this.chartClassName}`)[0].clientHeight;
+    const offsetWidth = document.getElementsByClassName(`${this.chartClassName}`)[0].clientWidth;
+
+    this.height = 300;
+    this.width = offsetWidth;
+
+    d3.select(`.${this.chartClassName}`).append('svg').attr('width', this.width).attr('height', this.height);
+
     const svg = d3.select(`.${this.chartClassName}`).select('svg'),
       margin = {top: 20, right: 80, bottom: 30, left: 50},
-      width = +svg.attr('width') - margin.left - margin.right,
-      height = +svg.attr('height') - margin.top - margin.bottom,
+      width = this.width - margin.left - margin.right,
+      height = this.height - margin.top - margin.bottom,
       g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    this.width = +svg.attr('width');
-    this.height = +svg.attr('height');
+    // this.width = +svg.attr('width');
+    // this.height = +svg.attr('height');
 
 
     const parseTime = d3.timeParse('%Y%m%d');
@@ -70,7 +89,7 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
       });
 
     const keys = d3.keys(sprints[0])
-      .filter((key: string) => key !== <string>'date');
+      .filter((key: string) => key !== <string>'date' && key !== <string>'lastDate');
 
     const estimates = keys.map(function (id) {
       return {
@@ -139,6 +158,24 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
         return z(d.id);
       });
 
+
+    if (this.forecast) {
+      const idx = estimates[0].values.length - 2;
+
+      const forecastStartDate = parseTime(sprints[0]['lastDate']);
+
+      console.log(forecastStartDate);
+
+      g.append('line')
+        .attr('x1', x(forecastStartDate))
+        .attr('y1', 0)
+        .attr('x2', x(forecastStartDate))
+        .attr('y2', height)
+        .style('stroke-width', 1)
+        .style('stroke', 'black')
+        .style('fill', 'none');
+    }
+
     if (this.interactive) {
       const legendSpace = 450 / keys.length;
 
@@ -205,8 +242,12 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
     const svg = d3.select(`.${this.chartClassName}`).select('svg');
     svg.remove();
 
-    d3.select(`.${this.chartClassName}`).append('svg').attr('width', this.width).attr('height', this.height);
     this.render();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.update();
   }
 
 }

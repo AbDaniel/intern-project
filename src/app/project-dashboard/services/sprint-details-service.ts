@@ -12,6 +12,7 @@ export class SprintDetailsService {
   private sprintsUrl = API_BASE_URL + '/sprint_time_line';  // URL to web api
   private usersUrl = this.sprintsUrl + '/users';  // URL to web api
   private velocityUrl = this.sprintsUrl + '/velocity';  // URL to web api
+  private velocityForecastUrl = this.sprintsUrl + '/velocity_forecast';  // URL to web api
 
   constructor(private http: Http) {
   }
@@ -30,6 +31,12 @@ export class SprintDetailsService {
 
   searchVelcoity(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.velocityUrl}/${boardId}/${daysAgo}`;
+
+    return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
+  }
+
+  velocityForecast(boardId: number): Promise<JSON[]> {
+    const url = `${this.velocityForecastUrl}/${boardId}`;
 
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }

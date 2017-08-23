@@ -6,7 +6,7 @@ import {ActivatedRoute, ParamMap} from '@angular/router';
 import {SprintDetailsService} from './services/sprint-details-service';
 import {CommitService} from './services/commit.service';
 import {JenkinsService} from './services/jenkins.service';
-import {IssuesService} from "./services/issues.service";
+import {IssuesService} from './services/issues.service';
 
 @Component({
   selector: 'qs-project-dashboard',
@@ -53,6 +53,18 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
   issuesChartYAxisTitle = 'Count';
   issues: JSON[];
 
+  commitsBySprint: JSON[];
+  commitSprintChartName = 'commitSprintChart';
+  commitSprintChartYAxisTitle = 'Lines Of Code';
+
+  buildStatus: JSON[];
+  buildTimelineChart = 'buildTimelinChart';
+  buildTimelineYAxis = 'Percentage';
+
+  forecastVelocity: JSON[];
+  forecastChart = 'forecastChart';
+  forecastChartYAxis = 'Percentage';
+
   constructor(private _titleService: Title,
               private _loadingService: TdLoadingService,
               private _projectService: ProjectService,
@@ -75,6 +87,16 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async loadForecastDetails() {
+    const loader = `${this.forecastChart}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.forecastVelocity = await this.sprintDetailsService.velocityForecast(this.project._id);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
   async loadSprintDetails() {
     const loader = `${this.sprintChartName}.load`;
     try {
@@ -90,6 +112,16 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     try {
       this._loadingService.register(loader);
       this.commits = await this.commitService.commitsCountTimeLine(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
+  async loadCommitsBySprint() {
+    const loader = `${this.commitsCountChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.commitsBySprint = await this.commitService.commitsBySprint(this.project._id, this.day);
     } finally {
       this._loadingService.resolve(loader);
     }
@@ -125,6 +157,16 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async loadBuildTimeline() {
+    const loader = `${this.testCoverageChartName}.load`;
+    try {
+      this._loadingService.register(loader);
+      this.buildStatus = await this.jenkinsService.buildStatus(this.project._id, this.day);
+    } finally {
+      this._loadingService.resolve(loader);
+    }
+  }
+
   async loadIssues() {
     const loader = `${this.issuesChartName}.load`;
     try {
@@ -148,6 +190,9 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
         this.loadSprintDetails();
         this.loadTestCoverage();
         this.loadIssues();
+        this.loadCommitsBySprint();
+        this.loadBuildTimeline();
+        this.loadForecastDetails();
       });
   }
 
@@ -167,5 +212,8 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     this.loadSprintDetails();
     this.loadTestCoverage();
     this.loadIssues();
+    this.loadCommitsBySprint();
+    this.loadBuildTimeline();
+    this.loadForecastDetails();
   }
 }

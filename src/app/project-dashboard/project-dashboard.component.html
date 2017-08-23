@@ -23,7 +23,7 @@
     </div>
 
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Sprint Velocity - JIRA</md-card-title>
           <md-divider></md-divider>
@@ -32,16 +32,14 @@
               <div *ngIf="sprints">
                 <qs-line-chart [data]="sprints"
                                [chartClassName]="sprintChartName"
-                               [yAxisTile]="sprintChartYAxisTitle" [interactive]="false"></qs-line-chart>
+                               [yAxisTile]="sprintChartYAxisTitle" [interactive]="false"
+                               [forecast]="false"></qs-line-chart>
               </div>
             </ng-template>
           </md-nav-list>
         </md-card>
       </div>
-    </div>
-
-    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Velocity Percentage</md-card-title>
           <md-divider></md-divider>
@@ -49,7 +47,8 @@
             <div *ngIf="velocity">
               <qs-line-chart [data]="velocity"
                              [chartClassName]="velocityChartName"
-                             [yAxisTile]="velocityChartYAxisTitle" [interactive]="false"></qs-line-chart>
+                             [yAxisTile]="velocityChartYAxisTitle" [interactive]="false"
+                             [forecast]="false"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>
@@ -57,7 +56,7 @@
     </div>
 
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Story Points Completed per Sprint by Team Member</md-card-title>
           <md-divider></md-divider>
@@ -65,7 +64,23 @@
             <div *ngIf="sprintUsers">
               <qs-line-chart [data]="sprintUsers"
                              [chartClassName]="sprintUsersChartName"
-                             [yAxisTile]="sprintUsersYAxisTitle" [interactive]="true"></qs-line-chart>
+                             [yAxisTile]="sprintUsersYAxisTitle" [interactive]="true"
+                             [forecast]="false"></qs-line-chart>
+            </div>
+          </ng-template>
+        </md-card>
+      </div>
+
+      <div flex-gt-sm="50">
+        <md-card>
+          <md-card-title>Git Commit Activity by Sprints</md-card-title>
+          <md-divider></md-divider>
+          <ng-template tdLoading="{{commitSprintChartName}}">
+            <div *ngIf="commitsBySprint">
+              <qs-line-chart [data]="commitsBySprint"
+                             [chartClassName]="commitSprintChartName"
+                             [yAxisTile]="commitSprintChartYAxisTitle" [interactive]="false"
+                             [forecast]="false"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>
@@ -73,32 +88,20 @@
     </div>
 
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
-        <md-card>
-          <md-card-title>Git Commit Activity by Sprints</md-card-title>
-          <md-divider></md-divider>
-          <div *ngIf="project">
-            <qs-git-line-chart [project]="project" [day]="day"
-                               [chartClassName]="'velocity-chart-3'"></qs-git-line-chart>
-          </div>
-        </md-card>
-      </div>
-    </div>
-
-    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Jenkins Build Success Rate</md-card-title>
           <md-divider></md-divider>
-          <div *ngIf="project">
-            <qs-jenkins-line-chart [project]="project" [day]="day" [chartClassName]="'jenkins'"></qs-jenkins-line-chart>
-          </div>
+          <ng-template tdLoading="{{buildTimelineChart}}">
+            <div *ngIf="buildStatus">
+              <qs-line-chart [data]="commitsBySprint"
+                             [chartClassName]="buildTimelineChart"
+                             [yAxisTile]="buildTimelineYAxis" [interactive]="false" [forecast]="false"></qs-line-chart>
+            </div>
+          </ng-template>
         </md-card>
       </div>
-    </div>
-
-    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Commits Count Timeline</md-card-title>
           <md-divider></md-divider>
@@ -106,11 +109,13 @@
             <div *ngIf="commits">
               <qs-line-chart [data]="commits"
                              [chartClassName]="commitsCountChartName"
-                             [yAxisTile]="commitsCountChartYAxisTitle" [interactive]="false"></qs-line-chart>
+                             [yAxisTile]="commitsCountChartYAxisTitle" [interactive]="false"
+                             [forecast]="false"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>
       </div>
+
     </div>
 
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
@@ -123,7 +128,7 @@
               <qs-line-chart [data]="commitUsers"
                              [chartClassName]="commitUsersChartName"
                              [yAxisTile]="commitUsersChartYAxisTitle"
-                             [interactive]="true"></qs-line-chart>
+                             [interactive]="true" [forecast]="false"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>
@@ -131,7 +136,7 @@
     </div>
 
     <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Test Coverage</md-card-title>
           <md-divider></md-divider>
@@ -140,15 +145,13 @@
               <qs-line-chart [data]="testCoverage"
                              [chartClassName]="testCoverageChartName"
                              [yAxisTile]="testCoverageChartYAxisTitle"
-                             [interactive]="true"></qs-line-chart>
+                             [interactive]="true" [forecast]="false"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>
       </div>
-    </div>
 
-    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-      <div flex-gt-sm="120">
+      <div flex-gt-sm="50">
         <md-card>
           <md-card-title>Issues Timeline</md-card-title>
           <md-divider></md-divider>
@@ -157,7 +160,24 @@
               <qs-line-chart [data]="issues"
                              [chartClassName]="issuesChartName"
                              [yAxisTile]="issuesChartYAxisTitle"
-                             [interactive]="true"></qs-line-chart>
+                             [interactive]="false" [forecast]="false"></qs-line-chart>
+            </div>
+          </ng-template>
+        </md-card>
+      </div>
+    </div>
+
+    <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
+      <div flex-gt-sm="50">
+        <md-card>
+          <md-card-title>Velocity Forecast</md-card-title>
+          <md-divider></md-divider>
+          <ng-template tdLoading="{{forecastChart}}">
+            <div *ngIf="forecastVelocity">
+              <qs-line-chart [data]="forecastVelocity"
+                             [chartClassName]="forecastChart"
+                             [yAxisTile]="forecastChartYAxis"
+                             [interactive]="false" [forecast]="true"></qs-line-chart>
             </div>
           </ng-template>
         </md-card>

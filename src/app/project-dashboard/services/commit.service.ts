@@ -15,7 +15,7 @@ export class CommitService {
   constructor(private http: Http) {
   }
 
-  search(boardId: number, daysAgo: number): Promise<JSON[]> {
+  commitsBySprint(boardId: number, daysAgo: number): Promise<JSON[]> {
     const url = `${this.commitsTimeLineUrl}/${boardId}/${daysAgo}`;
 
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
