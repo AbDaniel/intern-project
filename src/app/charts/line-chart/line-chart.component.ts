@@ -63,8 +63,15 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
 
     d3.select(`.${this.chartClassName}`).append('svg').attr('width', this.width).attr('height', this.height);
 
+    let margin;
+    if (this.interactive) {
+      margin = {top: 20, right: 150, bottom: 30, left: 50};
+    }
+    else {
+      margin = {top: 20, right: 80, bottom: 30, left: 50};
+    }
+
     const svg = d3.select(`.${this.chartClassName}`).select('svg'),
-      margin = {top: 20, right: 80, bottom: 30, left: 50},
       width = this.width - margin.left - margin.right,
       height = this.height - margin.top - margin.bottom,
       g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -166,7 +173,11 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
 
       console.log(forecastStartDate);
 
-      g.append('line')
+      g.append('g')
+        .attr('class', 'axis axis--y')
+        .attr('class', 'forecast-line')
+        .append('line')
+        .attr('stroke-dasharray', '5,5')
         .attr('x1', x(forecastStartDate))
         .attr('y1', 0)
         .attr('x2', x(forecastStartDate))
@@ -174,6 +185,16 @@ export class LineChartComponent implements OnChanges, AfterViewInit {
         .style('stroke-width', 1)
         .style('stroke', 'black')
         .style('fill', 'none');
+
+      g.select('.forecast-line')
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .style('font', '10px sans-serif')
+        .attr('y', x(forecastStartDate) + 8)
+        .attr('x', -40)
+        .attr('dy', '0.71em')
+        .attr('fill', '#000')
+        .text('Forecast');
     }
 
     if (this.interactive) {
