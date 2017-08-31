@@ -35,8 +35,8 @@ export class SprintDetailsService {
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }
 
-  velocityForecast(boardId: number): Promise<JSON[]> {
-    const url = `${this.velocityForecastUrl}/${boardId}`;
+  velocityForecast(boardId: number,  daysAgo: number): Promise<JSON[]> {
+    const url = `${this.velocityForecastUrl}/${boardId}/${daysAgo}`;
 
     return this.http.get(url).toPromise().then(response => response.json() as JSON[]).catch(this.handleError);
   }

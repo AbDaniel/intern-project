@@ -91,7 +91,7 @@ export class ProjectDashboardComponent implements OnInit, AfterViewInit {
     const loader = `${this.forecastChart}.load`;
     try {
       this._loadingService.register(loader);
-      this.forecastVelocity = await this.sprintDetailsService.velocityForecast(this.project._id);
+      this.forecastVelocity = await this.sprintDetailsService.velocityForecast(this.project._id, this.day);
     } finally {
       this._loadingService.resolve(loader);
     }
